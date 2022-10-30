@@ -39,7 +39,7 @@ jobs:
         run: |
           file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv");
           fileName=${file:2}
-          fileNameEncoded=$(python -c "import urllib, sys; print urllib.quote(sys.argv[1])"  "$fileName")
+          fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
           echo $fileNameEncoded
           curl --location --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/infrared-vods/"$fileName"
 
