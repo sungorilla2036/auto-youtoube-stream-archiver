@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Download And Cache Livestream VOD
+name: Download And Archive Livestream VOD
 
 concurrency: streamdownloader
 # Controls when the workflow will run
@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  download-or-archive:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
