@@ -1,0 +1,60 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  schedule:
+    - cron: '0 * * * *'  # every hour on the hour
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  archive-vod:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Cache For Downloaded Livestream
+        id: restore-cache
+        uses: actions/cache@v3.0.8
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ./*.mp4
+          # An explicit key for restoring and saving the cache
+          key: stream-vod
+      
+      - name: Upload Cached VOD
+        if: steps.restore-cache.outputs.cache-hit == 'true'
+        env:
+          accesskey: ${{secrets.ACCESS_KEY}}
+          secret: ${{secrets.SECRET}}
+        run: |
+          file=$(find -type f -name "*.mp4"); 
+          echo $file
+          curl --location --header 'x-amz-auto-make-bucket:1' \
+               --header "authorization: LOW $accesskey:$secret" \
+               --upload-file $file\
+               http://s3.us.archive.org/infrared-vods
+      
+      - name: Clear cache
+        if: steps.restore-cache.outputs.cache-hit == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("About to clear")
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+
+            github.rest.actions.deleteActionsCacheById({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              cache_id: stream-vod,
+            })
+            console.log("Clear completed")
