@@ -30,7 +30,9 @@ jobs:
         uses: actions/cache@v3.0.8
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
-          path: "*.mp4"
+          path: |
+            *.mp4
+            *.mkv
           # An explicit key for restoring and saving the cache
           key: stream-vod
 
