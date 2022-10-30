@@ -37,6 +37,7 @@ jobs:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
         run: |
+          sudo apt-get install curl
           file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv");
           fileName=${file:2}
           echo $file
