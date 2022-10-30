@@ -40,7 +40,7 @@ jobs:
           file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv");
           fileName=${file:2}
           echo $file
-          curl "http://s3.us.archive.org/infrared-vods/$fileName" --location --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file"
+          curl --location --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/infrared-vods/"$fileName"
 
       - name: Clear cache
         if: steps.restore-cache.outputs.cache-hit == 'true'
@@ -52,7 +52,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
-            github.rest.actions.deleteActionsCacheById({
+            await github.rest.actions.deleteActionsCacheById({
               owner: context.repo.owner,
               repo: context.repo.repo,
               cache_id: stream-vod,
