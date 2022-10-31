@@ -42,6 +42,7 @@ jobs:
           fileName=${file:2}
           fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
           echo $fileNameEncoded
+          file="'$file'"
           echo ${file@Q}
           curl --location --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file ${file@Q} http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
 
