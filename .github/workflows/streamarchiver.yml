@@ -49,10 +49,6 @@ jobs:
         with:
           script: |
             console.log("About to clear")
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
             await github.rest.actions.deleteActionsCacheById({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -70,4 +66,4 @@ jobs:
       - name: Download livestream
         if: steps.restore-cache.outputs.cache-hit != 'true'
         continue-on-error: true
-        run: yt-dlp https://www.youtube.com/channel/UC-5k8MpdvixOEQWTpkxH4LQ/live --live-from-start
+        run: yt-dlp https://www.youtube.com/c/InfraredShow/live --live-from-start
