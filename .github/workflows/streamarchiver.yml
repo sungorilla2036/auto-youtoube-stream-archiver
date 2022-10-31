@@ -32,7 +32,7 @@ jobs:
           key: stream-vod
 
       - name: Upload Cached VOD
-        if: steps.restore-cache.outputs.cache-hit != 'true'
+        if: steps.restore-cache.outputs.cache-hit == 'true'
         env:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
