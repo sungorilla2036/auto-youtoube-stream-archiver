@@ -28,11 +28,13 @@ jobs:
           path: |
             *.mp4
             *.mkv
+            *.part
+            *.ytdl
           # An explicit key for restoring and saving the cache
           key: stream-vod
 
       - name: Upload Cached VOD
-        if: steps.restore-cache.outputs.cache-hit == 'true'
+        if: steps.restore-cache.outputs.cache-hit == 'true' && (hashFiles('*.mp4') != '' || hashFiles('*.mkv') != '')
         env:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
@@ -45,7 +47,7 @@ jobs:
           curl -g --location --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
 
       - name: Clear cache
-        if: steps.restore-cache.outputs.cache-hit == 'true'
+        if: steps.restore-cache.outputs.cache-hit == 'true' && (hashFiles('*.mp4') != '' || hashFiles('*.mkv') != '')
         uses: actions/github-script@v6
         with:
           script: |
@@ -65,13 +67,13 @@ jobs:
             console.log("Clear completed")
 
       - name: Install dependencies
-        if: steps.restore-cache.outputs.cache-hit != 'true'
+        if: steps.restore-cache.outputs.cache-hit != 'true' || hashFiles('*.ytdl') != ''
         run: |
           sudo apt-get install -y ffmpeg
           pip install yt-dlp
 
       # Runs a set of commands using the runners shell
       - name: Download livestream
-        if: steps.restore-cache.outputs.cache-hit != 'true'
+        if: steps.restore-cache.outputs.cache-hit != 'true' || hashFiles('*.ytdl') != ''
         continue-on-error: true
         run: yt-dlp https://www.youtube.com/c/InfraredShow/live --live-from-start
