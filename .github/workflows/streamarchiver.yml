@@ -44,7 +44,7 @@ jobs:
           echo $fileNameEncoded
           printf -v fileEscaped '%q' "$file"
           echo $fileEscaped
-          curl --location --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$fileEscaped" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
+          curl --location --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file $fileEscaped http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
 
       - name: Clear cache
         if: steps.restore-cache.outputs.cache-hit == 'true'
