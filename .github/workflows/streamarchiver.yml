@@ -71,7 +71,7 @@ jobs:
           channelid: InfraredShow
         id: livecheck
         if: steps.upload.outcome == 'skipped'
-        run: curl -s https://www.youtube.com/c/"$channelid"/live | grep -o '{"text":" watching"}' -c
+        run: curl -s https://www.youtube.com/c/"$channelid"/live | grep -o '"isLive":true' -c
         continue-on-error: true
 
       - name: Install dependencies
