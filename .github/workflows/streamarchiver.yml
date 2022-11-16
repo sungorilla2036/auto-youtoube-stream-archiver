@@ -86,4 +86,4 @@ jobs:
           channelid: InfraredShow
         if: steps.predownload.outcome == 'success'
         continue-on-error: true
-        run: yt-dlp https://www.youtube.com/c/"$channelid"/live --live-from-start
+        run: yt-dlp https://www.youtube.com/c/"$channelid"/live --live-from-start -o '%(upload_date)s - %(title)s [%(id)s].%(ext)s'
