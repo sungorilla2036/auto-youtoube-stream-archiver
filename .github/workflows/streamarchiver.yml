@@ -44,7 +44,7 @@ jobs:
           fileName=${file:2}
           fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
           echo $fileNameEncoded
-          curl -g --location --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
+          curl -g --location --header 'x-archive-queue-derive:0' --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
 
       - name: Clear cache
         if: steps.upload.outcome == 'success'
